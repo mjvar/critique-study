@@ -1,6 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/revisit-studies/study/v2.3.2/src/parser/GlobalConfigSchema.json",
   "configsList": [
+    "pilot-thinkaloud",
+    "basic-questionnaire-study",
     "tutorial",
     "tutorial-replication",
     "demo-html",
@@ -52,6 +54,12 @@
     "test-step-logic"
   ],
   "configs": {
+    "pilot-thinkaloud": {
+      "path": "pilot-thinkaloud/config.json"
+    },
+    "basic-questionnaire-study": {
+      "path": "basic-questionnaire-study/config.json"
+    },
     "tutorial": {
       "path": "tutorial/config.json"
     },
