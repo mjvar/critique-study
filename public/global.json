@@ -55,7 +55,7 @@
   ],
   "configs": {
     "pilot-thinkaloud": {
-      "path": "pilot-thinkaloud/config.json"
+      "path": "!pilot-thinkaloud/config.json"
     },
     "basic-questionnaire-study": {
       "path": "basic-questionnaire-study/config.json"
