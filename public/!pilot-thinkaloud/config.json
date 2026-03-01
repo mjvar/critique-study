@@ -16,16 +16,17 @@
         ]
     },
     "uiConfig": {
-        "contactEmail": "contact@revisit.dev",
+        "contactEmail": "varona@cs.toronto.edu",
         "helpTextPath": "!pilot-thinkaloud/assets/help.md",
         "logoPath": "revisitAssets/revisitLogoSquare.svg",
         "withProgressBar": true,
         "autoDownloadStudy": false,
         "withSidebar": true,
-        "recordAudio": true
+        "recordAudio": false
     },
     "importedLibraries": [
-        "mic-check"
+        "mic-check",
+        "calvi"
     ],
     "baseComponents": {
         "stimulus-read": {
@@ -35,56 +36,81 @@
                 "width": "800px",
                 "height": "auto"
             },
-            "instruction": "Please read and understand the following visualization. Then, click 'next' to start the recording.",
+            "instruction": "Please read and understand the following visualization. Then, click 'Next' to proceed.",
             "nextButtonEnableTime": 30000,
-            "nextButtonText": "Start Recording",
+            "nextButtonText": "Next",
             "response": []
         },
-        "stimulus-words": {
+        "stimulus-pre": {
             "type": "image",
             "recordAudio": false,
             "style": {
                 "width": "800px",
                 "height": "auto"
             },
-            "instruction": "In 1-3 words, how would you describe the visualization you just read?",
+            "instruction": "In 3-5 words, how would you describe the visualization you just read?",
             "response": [
                 {
-                    "id": "stimulus-words-response",
-                    "prompt": "In 1-3 words, how would you describe the visualization you just read?",
+                    "id": "pre-stimulus-response",
+                    "prompt": "In 3-5 words, how would you describe the visualization you just read?",
                     "type": "shortText"
                 }
             ]
         },
-        "stimulus-speak": {
+        "stimulus-getready": {
             "type": "image",
+            "recordAudio": false,
             "style": {
                 "width": "800px",
                 "height": "auto"
             },
-            "instruction": "Please critique the visualization you just read. Your critiques may focus on strengths or weaknesses of the visualization.",
+            "instruction": "Please prepare to critique the visualization you just read. Your critiques may focus on strengths or weaknesses of the visualization. **When you are ready, click \"Start Recording\".**",
+            "nextButtonText": "Start Recording",
             "response": []
-        }
-
-    },
-    "components": {
-        "prolific-id": {
-            "type": "questionnaire",
+        },
+        "stimulus-speak": {
+            "type": "image",
+            "recordAudio": true,
+            "style": {
+                "width": "800px",
+                "height": "auto"
+            },
+            "instruction": "Please critique the visualization you just read. Your critiques may focus on strengths or weaknesses of the visualization. **Once you are finished speaking, click \"Finish Recording\".**",
+            "nextButtonText": "Finish Recording",
+            "response": []
+        },
+        "stimulus-post": {
+            "type": "react-component",
             "recordAudio": false,
+            "path": "!pilot-thinkaloud/assets/StimulusPostRecall.tsx",
+            "style": {
+                "width": "800px",
+                "height": "auto"
+            },
             "response": [
                 {
-                    "id": "prolific-id-response",
-                    "prompt": "Welcome to the study! Please enter your Prolific ID below.",
+                    "id": "post-stimulus-response",
                     "required": true,
+                    "prompt": "Would you say that your opinion of the visualization has changed significantly after speaking about it?",
+                    "type": "radio",
+                    "options": ["Yes, I have changed my opinion", "No, my opinion has not changed"]
+                },
+                {
+                    "id": "post-stimulus-description",
+                    "required": false,
+                    "prompt": "If your opinion has changed, please write how you would now describe the visualization in 3-5 words.",
+                    "secondaryText": "If your opinion has not changed, you may leave this field blank.",
                     "type": "shortText",
-                    "placeholder": "Enter your Prolific ID"
+                    "placeholder": "Enter your updated description here"
                 }
             ]
-        },
-        "introduction": {
+        }
+    },
+    "components": {
+        "consent": {
             "type": "markdown",
             "recordAudio": false,
-            "path": "!pilot-thinkaloud/assets/intro.md",
+            "path": "!pilot-thinkaloud/assets/intro-1.md",
             "response": [
                 {
                     "id": "q-sidebar",
@@ -95,95 +121,199 @@
                 }
             ]
         },
-        "thinkaloud-instructions": {
+        "introduction": {
             "type": "markdown",
             "recordAudio": false,
-            "path": "!pilot-thinkaloud/assets/thinkaloud-instructions.md",
+            "path": "!pilot-thinkaloud/assets/intro-2.md",
             "response": []
         },
-        "stimulus-1-read": {
+        "calvi-intro": {
+            "type": "markdown",
+            "recordAudio": false,
+            "path": "!pilot-thinkaloud/assets/calvi-intro.md",
+            "response": []
+        },
+        "thinkaloud-intro": {
+            "type": "markdown",
+            "recordAudio": false,
+            "path": "!pilot-thinkaloud/assets/thinkaloud-intro.md",
+            "response": []
+        },
+        "demographics": {
+            "type": "questionnaire",
+            "recordAudio": false,
+            "response": [
+                {
+                    "id": "age",
+                    "prompt": "What is your age?",
+                    "required": true,
+                    "type": "numerical",
+                    "min": 18,
+                    "max": 120
+                },
+                {
+                    "id": "gender",
+                    "prompt": "What is your gender identity?",
+                    "required": true,
+                    "type": "radio",
+                    "options": ["Woman", "Man", "Non-binary", "Prefer not to say"],
+                    "withOther": true
+                },
+                {
+                    "id": "education",
+                    "prompt": "What is the highest level of education you have completed?",
+                    "required": true,
+                    "type": "radio",
+                    "options": ["Less than high school", "High school or equivalent", "Some college", "Bachelor's degree", "Graduate degree"],
+                    "withOther": true
+                }
+            ]
+        },
+        "media-questionnaire": {
+            "type": "questionnaire",
+            "recordAudio": false,
+            "response": [
+                {
+                    "id": "media-matrix",
+                    "prompt": "How often do you get news from the following sources?",
+                    "type": "matrix-radio",
+                    "answerOptions": ["Never", "Hardly ever", "Sometimes", "Often"],
+                    "questionOptions": ["Print newspapers", "Radio", "Television news (including local, national, and cable news)", "Facebook", "Reddit", "X (formerly Twitter)", "Instagram", "TikTok", "YouTube", "News apps on your phone (e.g., Apple News, Google News, etc.)", "News websites (e.g., CNN.com, FoxNews.com, etc.)"]
+                }
+            ]
+        },
+        "issue-familiarity": {
+            "type": "questionnaire",
+            "recordAudio": false,
+            "instructionLocation": "aboveStimulus",
+            "response": [
+                {
+                    "id": "issue-familiarity-matrix",
+                    "prompt": "Please rate how informed you would consider yourself about the following topics:",
+                    "secondaryText": "There are no right or wrong answers, so please answer honestly based on your own feelings of familiarity with each topic.",
+                    "type": "matrix-radio",
+                    "answerOptions": ["I have never heard of it", "I’ve heard of it, but know almost nothing", "I know a little", "I know a fair amount", "I know a lot"],
+                    "questionOptions": ["Gun control", "United States military spending", "Donald Trump's presidency", "United States immigration policy"]
+                }
+            ]
+        },
+        "belief-questionnaire": {
+            "type": "questionnaire",
+            "recordAudio": false,
+            "response": [
+                {
+                    "id": "belief-matrix",
+                    "prompt": "Please rate how much you agree or disagree with the following statements:",
+                    "type": "matrix-radio",
+                    "answerOptions": ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"],
+                    "questionOptions": ["Gun ownership should be more strictly regulated in the United States to reduce violent crime.", "The United States Government should increase its military budget to protect national security.", "I approve of the way Donald Trump is handling his job as President.", "Immigration in the United States should be more strictly regulated to reduce the number of undocumented immigrants."]
+                }
+            ]
+        },
+        "stimulus-guns-read": {
             "baseComponent": "stimulus-read",
             "recordAudio": false,
             "path": "!pilot-thinkaloud/assets/refugees.png"
         },
-        "stimulus-1-words": {
-            "baseComponent": "stimulus-words",
+        "stimulus-guns-pre": {
+            "baseComponent": "stimulus-pre",
             "recordAudio": false,
             "path": "!pilot-thinkaloud/assets/refugees.png"
         },
-        "stimulus-1-speak": {
+        "stimulus-guns-getready": {
+            "baseComponent": "stimulus-getready",
+            "recordAudio": false,
+            "path": "!pilot-thinkaloud/assets/refugees.png"
+        },
+        "stimulus-guns-speak": {
             "baseComponent": "stimulus-speak",
             "recordAudio": true,
             "path": "!pilot-thinkaloud/assets/refugees.png"
         },
-        "stimulus-2-read": {
+        "stimulus-guns-post": {
+            "baseComponent": "stimulus-post",
+            "recordAudio": false,
+            "parameters": {
+                "imagePath": "!pilot-thinkaloud/assets/refugees.png",
+                "imageAlt": "Gun control chart"
+            }
+        },
+        "stimulus-defense-read": {
             "baseComponent": "stimulus-read",
             "recordAudio": false,
             "path": "!pilot-thinkaloud/assets/defense.png"
         },
-        "stimulus-2-words": {
-            "baseComponent": "stimulus-words",
+        "stimulus-defense-pre": {
+            "baseComponent": "stimulus-pre",
             "recordAudio": false,
             "path": "!pilot-thinkaloud/assets/defense.png"
         },
-        "stimulus-2-speak": {
+        "stimulus-defense-getready": {
+            "baseComponent": "stimulus-getready",
+            "recordAudio": false,
+            "path": "!pilot-thinkaloud/assets/defense.png"
+        },
+        "stimulus-defense-speak": {
             "baseComponent": "stimulus-speak",
             "recordAudio": true,
             "path": "!pilot-thinkaloud/assets/defense.png"
+        },
+        "stimulus-defense-post": {
+            "baseComponent": "stimulus-post",
+            "recordAudio": false,
+            "parameters": {
+                "imagePath": "!pilot-thinkaloud/assets/defense.png",
+                "imageAlt": "Defense chart"
+            }
+        },
+        "break": {
+            "type": "markdown",
+            "recordAudio": false,
+            "path": "!pilot-thinkaloud/assets/break.md",
+            "nextButtonEnableTime": 10000,
+            "response": []
         }
     },
     "sequence": {
         "order": "fixed",
         "components": [
-            "prolific-id",
+            "consent",
             "introduction",
             "$mic-check.co.audioTest",
-            "thinkaloud-instructions",
+            "demographics",
+            "media-questionnaire",
+            "belief-questionnaire",
+            "calvi-intro",
+            "$calvi.sequences.specificBank",
+            "break",
             {
-                "id": "summary-first",
-                "conditional": true,
-                "order": "latinSquare",
+                "id": "thinkalouds",
+                "order": "fixed",
                 "components": [
+                    "thinkaloud-intro",
                     {
-                        "order": "fixed",
-                        "components": ["stimulus-1-read", "stimulus-1-words",  "stimulus-1-speak"]
-                    },
-                    {
-                        "order": "fixed",
-                        "components": ["stimulus-2-read", "stimulus-2-words",  "stimulus-2-speak"]
+                        "order": "latinSquare",
+                        "components": [
+                            {
+                                "order": "fixed",
+                                "components": ["stimulus-guns-read", "stimulus-guns-pre", "stimulus-guns-getready",  "stimulus-guns-speak", "stimulus-guns-post"]
+                            },
+                            {
+                                "order": "fixed",
+                                "components": ["stimulus-defense-read", "stimulus-defense-pre", "stimulus-defense-getready",  "stimulus-defense-speak", "stimulus-defense-post"]
+                            }
+                        ],
+                        "interruptions": [
+                        {
+                            "spacing": 2,
+                            "firstLocation": 1,
+                            "components": ["break"]
+                        }
+                    ]
                     }
                 ]
             },
-            {
-                "id": "summary-last",
-                "conditional": true,
-                "order": "latinSquare",
-                "components": [
-                    {
-                        "order": "fixed",
-                        "components": ["stimulus-1-read", "stimulus-1-speak", "stimulus-1-words"]
-                    },
-                    {
-                        "order": "fixed",
-                        "components": ["stimulus-2-read", "stimulus-2-speak", "stimulus-2-words"]
-                    }
-                ]
-            },
-            {
-                "id": "no-summary",
-                "conditional": true,
-                "order": "latinSquare",
-                "components": [
-                    {
-                        "order": "fixed",
-                        "components": ["stimulus-1-read", "stimulus-1-speak"]
-                    },
-                    {
-                        "order": "fixed",
-                        "components": ["stimulus-2-read", "stimulus-2-speak"]
-                    }
-                ]
-            }
+            "issue-familiarity"
         ]
     }
 }

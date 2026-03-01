@@ -1,3 +1,0 @@
-In the following sections, you will be presented with three data visualizations. You will have 30 seconds to read and understand each visualization. After 30 seconds, you may click "Start Recording" to begin the speaking task. 
-
-For the speaking task, you will be asked to critique the visualization you just read. **Your critiques may focus on strengths or weaknesses of the visualization.** You will have up to 1 minute of speaking time, which will be shown on the progress bar on the screen.
